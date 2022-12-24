@@ -49,4 +49,8 @@ export class BooksService {
         return this.booksRepository.delete(id);
     }
 
+    async assign(id: number, dto) {}
+
+    async freeUp(id: number) {}
+
 }

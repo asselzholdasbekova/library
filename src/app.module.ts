@@ -12,7 +12,7 @@ import { Book } from "./books/books.entity";
     controllers: [],
     imports: [
         ConfigModule.forRoot({
-            envFilePath: `.${process.env.NODE_ENV}.env`
+            envFilePath: '.env'
         }),
         TypeOrmModule.forRoot({
             type: 'postgres',

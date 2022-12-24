@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { AddBookDto } from "./dto/add-book.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { SubscribeUserDto } from "./dto/subscribe-user.dto";
 import { User } from "./users.entity";
@@ -78,9 +77,5 @@ export class UsersService {
         
         return user;
     }
-
-    async addBook(dto: AddBookDto) {}
-
-    async returnBook(dto: AddBookDto) {}
-
+    
 }

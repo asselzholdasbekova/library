@@ -2,13 +2,14 @@ import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/commo
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { DeleteResult } from "typeorm";
 import { Book } from "./books.entity";
+import { BooksService } from "./books.service";
 import { CreateBookDto } from "./dto/create-book.dto";
 
 @ApiTags('Books')
 @Controller('books')
 export class BooksController {
 
-    constructor(private booksService) {}
+    constructor(private booksService: BooksService) {}
 
     @ApiOperation({ summary: 'Returns all books' })
     @ApiResponse({ status: 200, type: [Book] })
@@ -45,6 +46,25 @@ export class BooksController {
     @Delete(':id')
     delete(@Param('id') id: number) {
         return this.booksService.delete(id);
+    }
+
+    @ApiOperation({ summary: 'Assign the book to a user' })
+    @ApiResponse({ status: 200, type: Book })
+    @Patch(':id/assign')
+    assign(
+        @Param('id') id: number,
+        dto
+    ) {
+        return this.booksService.assign(id, dto);
+    }
+
+    @ApiOperation({ summary: 'Removes the user from the book' })
+    @ApiResponse({ status: 200, type: Book })
+    @Patch(':id/freeup')
+    freeUp(
+        @Param('id') id: number
+    ) {
+        return this.booksService.freeUp(id);
     }
 
 }
