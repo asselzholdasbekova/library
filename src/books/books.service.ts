@@ -1,13 +1,19 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { User } from "../users/users.entity";
 import { Repository } from "typeorm";
 import { Book } from "./books.entity";
+import { AssignBookDto } from "./dto/assign-book.dto";
 import { CreateBookDto } from "./dto/create-book.dto";
+import { SubscribeUserDto } from "src/users/dto/subscribe-user.dto";
 
 @Injectable()
 export class BooksService {
 
-    constructor(@InjectRepository(Book) private booksRepository: Repository<Book>) {}
+    constructor(
+        @InjectRepository(Book) private booksRepository: Repository<Book>,
+        @InjectRepository(User) private usersRepository: Repository<User>
+    ) {}
 
     async getById(id: number) {
         const book = this.booksRepository.findOne({ where: { id } });
@@ -49,8 +55,32 @@ export class BooksService {
         return this.booksRepository.delete(id);
     }
 
-    async assign(id: number, dto) {}
+    async assign(id: number, dto: AssignBookDto) {
+        console.log(dto);
+        const book = await this.getById(id);
+        const user = await this.usersRepository.findOne({ where: { id: dto.userId} });
 
-    async freeUp(id: number) {}
+        console.log(user);
+        if (!user.books) {
+            user.books = [];
+        }
+        if((user.books.length > 5 && !book.user) || !user.hasSubscription) {
+            console.log('Error');
+            return book;
+        }
+        user.books.push(book);
+        await this.booksRepository.save(book);
+        await this.usersRepository.save(user);
+
+        return book;
+    }
+
+    async freeUp(id: number) {
+        const book = await this.getById(id);
+        book.user = null;
+        await this.booksRepository.save(book);
+
+        return book;
+    }
 
 }

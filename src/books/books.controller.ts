@@ -1,8 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { SubscribeUserDto } from "src/users/dto/subscribe-user.dto";
 import { DeleteResult } from "typeorm";
 import { Book } from "./books.entity";
 import { BooksService } from "./books.service";
+import { AssignBookDto } from "./dto/assign-book.dto";
 import { CreateBookDto } from "./dto/create-book.dto";
 
 @ApiTags('Books')
@@ -53,7 +55,7 @@ export class BooksController {
     @Patch(':id/assign')
     assign(
         @Param('id') id: number,
-        dto
+        @Body() dto: AssignBookDto
     ) {
         return this.booksService.assign(id, dto);
     }
